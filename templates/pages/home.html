@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+{% block title %} - Home{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-5 text-center">Welcome to Twitter Clone</h1>
+        <div class="row justify-content-center my-5">
+            <form action="/tweets/create-tweet" method="POST">
+                {% csrf_token %}
+                <textarea 
+                    class="col-12 my-2 py-2" 
+                    style="resize: none;" 
+                    name="content" 
+                    id="tweet-input" 
+                    placeholder="What's on your thought?"
+                    cols="30" rows="3"></textarea>
+                <button class="btn btn-primary my-2 float-right">Tweet</button>
+            </form>
+        </div>
+        <div class="row my-5" id="tweets">Replace Me</div>
+    </div>
+
+    <script>
+        const tweetsElement = document.getElementById("tweets");
+        tweetsElement.innerHTML = "Loading ..."
+
+        function handleClick(tweetId) {
+            const selectedTweetElement = document.getElementById(`like-tweet-${tweetId}`)
+            const tweetLikesCount = parseInt(selectedTweetElement.innerHTML.split(' ')[0])
+            selectedTweetElement.innerHTML = `${tweetLikesCount + 1} likes`
+        }
+
+        const xhr = new XMLHttpRequest();
+        const method = 'GET';
+        const responseType = 'json';
+        const url = '/tweets';
+
+        xhr.responseType = responseType;
+        xhr.open(method, url);
+        xhr.onload = function() {
+            const serverResponse = xhr.response;
+            const listedItems = serverResponse.response;
+            const tweets = listedItems.map(tweet => {
+                tweet.likes = Math.floor(Math.random() * 10000);
+                return `<div class="col-12 mb-4 tweet border-top border-bottom py-3" id="tweet-${tweet.id}">${tweet.content}</div>
+                        <button 
+                            class="btn btn-primary btn-sm mb-4" 
+                            id="like-tweet-${tweet.id}"
+                            onClick=handleClick(${tweet.id})>${tweet.likes} likes</button>` 
+            }).join("");
+
+            tweetsElement.innerHTML = tweets;
+        }
+        xhr.send();
+    </script>
+
+{% endblock content %}
