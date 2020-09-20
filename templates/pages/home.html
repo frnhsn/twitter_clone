@@ -35,13 +35,16 @@
         const xhr = new XMLHttpRequest();
         const method = 'GET';
         const responseType = 'json';
-        const url = '/tweets';
+        const url = '/api/tweets/';
 
         xhr.responseType = responseType;
         xhr.open(method, url);
         xhr.onload = function() {
-            const serverResponse = xhr.response;
-            const listedItems = serverResponse.response;
+            const listedItems = xhr.response;
+
+            console.log(listedItems);
+            
+            
             const tweets = listedItems.map(tweet => {
                 tweet.likes = Math.floor(Math.random() * 10000);
                 return `<div class="col-12 mb-4 tweet border-top border-bottom py-3" id="tweet-${tweet.id}">${tweet.content}</div>

@@ -1,8 +1,16 @@
 from django.urls import path
-from .views import tweet_detail_view, tweets_list_view, create_tweet_view
+from .views import (
+    tweet_detail_view, 
+    tweets_list_view, 
+    like_tweet_view, 
+    unlike_tweet_view,
+    retweet_tweet_view
+    )
 
 urlpatterns = [
-    path('', tweets_list_view),
-    path('<int:tweet_id>', tweet_detail_view, name='tweet_detail'),
-    path('create-tweet', create_tweet_view, name='create_tweet')
+    path('tweets/', tweets_list_view),
+    path('tweet/<int:tweet_id>', tweet_detail_view, name='tweet_detail'),
+    path('tweet/<int:tweet_id>/like', like_tweet_view, name='like_tweet_view'),
+    path('tweet/<int:tweet_id>/unlike', unlike_tweet_view, name='unlike_tweet_view'),
+    path('tweet/<int:tweet_id>/retweet', retweet_tweet_view, name='retweet_tweet_view'),
 ]
