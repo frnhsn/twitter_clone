@@ -20,5 +20,8 @@ from tweets.views import home_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
-    path('api/', include('tweets.urls'))
+    path('api/', include('tweets.urls')),
+    path('api/profile/', include('profiles.api.urls')),
+    path('account/', include('accounts.urls')),
+    path('profiles/', include('profiles.urls'))
 ]

@@ -6,6 +6,8 @@
 {% block content %}
     <div class="container">
         <h1 class="mt-5 text-center">Welcome to Twitter Clone</h1>
+        <h5 class="text-center">Hey, {{ request.user }}</h5>
+
         <div class="row justify-content-center my-5">
             <form action="/tweets/create-tweet" method="POST">
                 {% csrf_token %}

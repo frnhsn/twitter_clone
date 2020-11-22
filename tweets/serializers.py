@@ -5,6 +5,7 @@ class TweetSerializers(serializers.ModelSerializer):
     """ Tweet serializers """
     content = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
+    is_a_retweet = serializers.SerializerMethodField()
 
     class Meta:
         model = Tweet
@@ -20,11 +21,9 @@ class TweetSerializers(serializers.ModelSerializer):
     def get_likes(self, obj):
         return obj.likes.count()
 
-    # def get_image(self, obj):
-    #     image = obj.image 
-    #     if obj.is_retweet():
-    #         image = obj.parent.image
-    #     return image
+    def get_is_a_retweet(self, obj):
+        return obj.is_retweet()
+
 
 class CreateTweetSerializers(serializers.ModelSerializer):
     """ Create Tweet serializers """

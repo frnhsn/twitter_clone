@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'tweets',
+    'accounts',
+    'profiles',
 ]
 
 MIDDLEWARE = [

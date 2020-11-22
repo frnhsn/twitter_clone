@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from django.http import JsonResponse, Http404
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -23,28 +24,24 @@ def tweets_list_view(request, *args, **kwargs):
 
     if request.method == 'GET':
         queryset = Tweet.objects.all()
+        username = request.GET.get('username')
+
+        if username:
+            queryset = Tweet.objects.by_username(username)
+
         serializers = TweetSerializers(queryset, many=True)
 
         return Response(serializers.data, status=200) 
 
     if request.method == 'POST':
-
         data = request.data
 
         if (data.get('parent', False)):
             data['parent'] = None
 
         data['user'] = request.user
-
-        print('data', data)
-
         new_tweet = Tweet.objects.create(**data)
-
-        print('new_Tweet', new_tweet)
-
         serializers = TweetSerializers(new_tweet)
-
-        print('New tweet data',serializers.data)
 
         return Response(serializers.data, status=200)
 
@@ -61,7 +58,8 @@ def tweet_detail_view(request, *args, **kwargs):
     if not queryset.exists():
         return Response({"message": "Tweet not found"}, status=404)
 
-    serializers = TweetSerializers(queryset.first())
+    tweet = queryset.first()
+    serializers = TweetSerializers(tweet)
 
     if request.method == 'GET':
         return Response({"response": serializers.data}, status=200)
@@ -159,26 +157,51 @@ def retweet_tweet_view(request, *args, **kwargs):
     tweet = tweet_obj.first()
     user = request.user
 
-    # If this is a first tweet, create a new tweet with this as a parent
+    # If this is a first tweet, create a new tweet with this tweet as a parent
     if tweet.parent is None:
-        new_tweet = Tweet.objects.create(content="", image="", parent=tweet, user=request.user)
-        serializers = CreateTweetSerializers(data={
+        data = {
             "content": "",
             "image": None,
-            "parent": tweet.id,
-            "user": request.user.id
-        })
-    # If this a retweet, seek root tweet and set it as a parent for new retweet
+            "parent": tweet,
+            "user": request.user
+        }
+    # If this a retweet, find root tweet and set it as a parent
     else:
-        serializers = CreateTweetSerializers(data={
+        data = {
             "content": "",
             "image": None,
-            "parent": tweet.parent.id,
-            "user": request.user.id
-        })
+            "parent": tweet.parent,
+            "user": request.user
+        }
 
-    if serializers.is_valid():
-        serializers.save()
+    existing_retweet = Tweet.objects.filter(parent=data["parent"], user=request.user)
+
+    if existing_retweet.count() > 0:
+        return Response({"message": "Already retweeted by this user"}, status=400)
+
+    instance = Tweet.objects.create(**data)
+    serializers = TweetSerializers(instance)
 
     return Response(serializers.data, status=200)
 
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def tweets_feed_view(request, *args, **kwargs):
+    """ 
+    REST API VIEW of tweets feed    
+    Return JSON data
+    """
+
+    user = request.user
+    following_user_id = []
+
+    if user.following.exists():
+        following_user_id = user.following.values_list("user_id", flat=True)
+
+    qs = Tweet.objects.filter(
+        Q(user__id__in=following_user_id) | Q(user=user)).distinct().order_by('-timestamp')
+    serializers = TweetSerializers(qs, many=True)
+
+    return Response(serializers.data, status=200)
