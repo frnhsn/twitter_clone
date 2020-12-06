@@ -4,8 +4,11 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
+from rest_framework.generics import ListCreateAPIView
 
 from ..models import Profile
+
+from ..serializers import ProfileSerializer
 
 @api_view(['GET','POST'])
 @authentication_classes([TokenAuthentication])
@@ -36,3 +39,13 @@ def profile_follow_view(request, username, *args, **kwargs):
         "is_following": me in profile.follower.all()
     }, status=200)
         
+class ProfileListCreateView(ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user=self.request.user
+        serializer.save(user=user)
+
+# eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InVuYW1ldW5hbWUiLCJleHAiOjE2MDcxNTMyMjgsImVtYWlsIjoiIn0.5A1t9pazzRdcy8feTLgEifP9qxx55w1FoOElhSF8dEI

@@ -38,6 +38,3 @@ def profile_update_view(request, *args, **kwargs):
         profile_obj.save()
 
 
-
-
-    

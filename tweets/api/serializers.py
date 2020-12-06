@@ -1,11 +1,14 @@
 from rest_framework import serializers
-from .models import Tweet
+from ..models import Tweet
+
+from profiles.serializers import ProfileSerializer
 
 class TweetSerializers(serializers.ModelSerializer):
     """ Tweet serializers """
     content = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
     is_a_retweet = serializers.SerializerMethodField()
+    user = ProfileSerializer(source='user.profile')
 
     class Meta:
         model = Tweet
@@ -23,7 +26,6 @@ class TweetSerializers(serializers.ModelSerializer):
 
     def get_is_a_retweet(self, obj):
         return obj.is_retweet()
-
 
 class CreateTweetSerializers(serializers.ModelSerializer):
     """ Create Tweet serializers """

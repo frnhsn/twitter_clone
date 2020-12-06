@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
 
+    'utils',
     'tweets',
     'accounts',
     'profiles',
@@ -131,7 +132,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_RENDERER_CLASSES = [
-    'rest_framework.renderers.BrowsableAPIRenderer'
+    'rest_framework.renderers.JSONRenderer'
 ]
 
 if DEBUG:
@@ -142,13 +143,15 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_RENDERER_CLASSES': 
         DEFAULT_RENDERER_CLASSES,
-        # ['rest_framework.renderers.JSONRenderer'],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
