@@ -15,25 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from tweets.views import home_view
 
 from rest_framework import routers
 
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from  accounts.api.views import (MyObtainTokenPairView, )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view),
+    path('api/auth/jwt/create', MyObtainTokenPairView.as_view()),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.jwt')),
     path('api/', include('tweets.api.urls')),
     path('api/profile/', include('profiles.api.urls')),
     path('account/', include('accounts.urls')),
     path('profiles/', include('profiles.urls')),
-    path('api-token-refresh/', refresh_jwt_token),
-    path('api-token-auth/', obtain_jwt_token)
 ]
-
-# router = routers.SimpleRouter()
-# router.register(r'users', UserViewSet)
-# router.register(r'accounts', AccountViewSet)
-
-# urlpatterns += router.urls

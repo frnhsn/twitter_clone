@@ -1,7 +1,9 @@
 from django.db import models
-from django.conf import Settings
+from django.conf import settings
 from django.db.models.signals import post_save
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User 
+
+# User  = settings.AUTH_USER_MODEL
 
 class FollowingRelation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

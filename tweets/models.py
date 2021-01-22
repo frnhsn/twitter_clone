@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import User 
+
+# User = settings.AUTH_USER_MODEL
 
 class TweetLike(models.Model):
     """Model definition for TweetLike. An pivot table for User and Tweet"""
@@ -77,7 +81,7 @@ class Tweet(models.Model):
         return False
 
     def is_already_retweeted(self, user=None):
-        """Take an user as an argument and return True if this tweet already retweeted by this user"""
+        """Take an user as an argument and return True if this tweet already retweeted by user"""
         if user is not None and self.is_retweet():
             existing_retweet = Tweet.objects.filter(parent=self.parent, user=user)
             if existing_retweet.count() > 0:
@@ -85,3 +89,8 @@ class Tweet(models.Model):
             else:
                 return False
         return None
+
+    def is_already_liked(self, user=None):
+        """Take an user as an argument and return True if this tweet already liked by user"""
+        if user is not None:
+            return self.likes.filter(id=user.id).exists()

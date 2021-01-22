@@ -1,25 +1,53 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import JsonResponse, Http404
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.exceptions import PermissionDenied
 
+from ..permissions import IsOwnerOrReadOnly
 from tweets.models import Tweet
 from .serializers import TweetSerializers, CreateTweetSerializers
 from utils.paginations import get_paginated_response
 
 
 class TweetCreateListView(ListCreateAPIView):
+    """ 
+    REST API VIEW of tweets list
+    Return JSON data
+    """
+    queryset = Tweet.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if (self.request.method == 'POST'):
+            return CreateTweetSerializers
+        return TweetSerializers
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        tweet_obj = Tweet.objects.get(id=serializer.data['id'])
+        return_serializers = TweetSerializers(tweet_obj)
+        return Response(return_serializers.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    
+class TweetRetrieveDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Tweet.objects.all()
     serializer_class = TweetSerializers
-    authentication_classes = []
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 @api_view(['GET','POST'])
-@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def tweets_list_view(request, *args, **kwargs):
     """ 
@@ -67,11 +95,13 @@ def tweet_detail_view(request, *args, **kwargs):
     if request.method == 'GET':
         return Response({"response": serializers.data}, status=200)
     if request.method == 'DELETE':
+        user = request.user
+        if not user.is_authenticated() and tweet.user is user:
+            raise PermissionDenied()
         queryset.first().delete()
-        return Response({"response": "Tweet has been deleted"}, status=200)
+        return Response({}, status=204)
 
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def like_tweet_view(request, *args, **kwargs):
     """ 
@@ -89,25 +119,13 @@ def like_tweet_view(request, *args, **kwargs):
 
     user = request.user
     tweet.likes.add(user)
-    
-    if tweet.parent:
-        content = tweet.parent.content
-    else:
-        content = tweet.content
 
-    return Response({
-        "id": tweet.id,
-        "content": content,
-        "image": tweet.image or None,
-        "likes": tweet.likes.count(),
-        "user_id": tweet.user and tweet.user.id or None,
-        "parent_id": tweet.parent and tweet.parent.id or None,
-        "timestamp": tweet.timestamp
-    }, status=200)
+    serializer = TweetSerializers(tweet, context={'request': request})
+
+    return Response(serializer.data, status=200)
 
 
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def unlike_tweet_view(request, *args, **kwargs):
     """ 
@@ -126,28 +144,16 @@ def unlike_tweet_view(request, *args, **kwargs):
     user = request.user
     tweet.likes.remove(user)
 
-    if tweet.parent:
-        content = tweet.parent.content
-    else:
-        content = tweet.content
-    
-    return Response({
-        "id": tweet.id,
-        "content": content,
-        "image": tweet.image or None,
-        "likes": tweet.likes.count(),
-        "user_id": tweet.user and tweet.user.id or None,
-        "parent_id": tweet.parent and tweet.parent.id or None,
-        "timestamp": tweet.timestamp
-    }, status=200)
+    serializer = TweetSerializers(tweet, context={'request': request})
+
+    return Response(serializer.data, status=200)
 
 
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def retweet_tweet_view(request, *args, **kwargs):
     """ 
-    REST API VIEW of Retweet a Tweet
+    REST API VIEW of Retweet 
     Return JSON data
     """
 
@@ -180,16 +186,62 @@ def retweet_tweet_view(request, *args, **kwargs):
     existing_retweet = Tweet.objects.filter(parent=data["parent"], user=request.user)
 
     if existing_retweet.count() > 0:
-        return Response({"message": "Already retweeted by this user"}, status=400)
-
-    instance = Tweet.objects.create(**data)
-    serializers = TweetSerializers(instance)
+        serializers = TweetSerializers(existing_retweet.first())
+    else:
+        instance = Tweet.objects.create(**data)
+        serializers = TweetSerializers(instance)
 
     return Response(serializers.data, status=200)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def untweet_view(request, *args, **kwargs):
+    """ 
+    REST API VIEW of unretweet
+    Return JSON data
+    """
+
+    tweet_id = int(kwargs['tweet_id'])
+    tweet_obj = Tweet.objects.filter(id=tweet_id)
+    
+    if not tweet_obj.exists():
+        return Response({"message": "Tweet not found"}, status=404)
+
+    tweet = tweet_obj.first()
+    if tweet.user is not user:
+        return Response({"message": "You don't have permission to access this resource"}, status=403)
+
+    if not tweet.is_retweet():
+        return Response({"message": "This is not a retweet"}, status=404)
+
+    tweet.delete()
+
+    return Response({}, status=204)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_tweet_view(request, *args, **kwargs):
+    """ 
+    REST API VIEW of Remove a Tweeet
+    Return JSON data
+    """
+
+    tweet_id = int(kwargs['tweet_id'])
+    tweet_obj = Tweet.objects.filter(id=tweet_id)
+    
+    if not tweet_obj.exists():
+        return Response({"message": "Tweet not found"}, status=404)
+
+    tweet = tweet_obj.first()
+    if tweet.user is not user:
+        return Response({"message": "You don't have permission to access this resource"}, status=403)
+
+    tweet.delete()
+
+    return Response({}, status=204)
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def tweets_feed_view(request, *args, **kwargs):
     """ 
@@ -206,5 +258,7 @@ def tweets_feed_view(request, *args, **kwargs):
     qs = Tweet.objects.filter(
         Q(user__id__in=following_user_id) | Q(user=user)).distinct().order_by('-timestamp')
 
-    return get_paginated_response(qs, TweetSerializers, request)
+    serializer = TweetSerializers(qs, many=True, context={'request': request})
+
+    return Response(serializer.data, status=200)
 
