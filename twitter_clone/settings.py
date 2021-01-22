@@ -90,7 +90,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -207,7 +206,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
-ALLOWED_HOSTS = ['twitter-clone-farhan.herokuapp.com','127.0.0.1:8000','localhost']
+ALLOWED_HOSTS = ['twitter-clone-farhan.herokuapp.com','127.0.0.1','localhost']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
