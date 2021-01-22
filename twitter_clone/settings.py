@@ -25,10 +25,6 @@ SECRET_KEY = '9e1)n#rzu1=d)qv1-+f^75)9-fl_72g348-sj5n7qnxn^sq7nl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
-
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,7 +64,7 @@ ROOT_URLCONF = 'twitter_clone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,6 +128,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILE_DIRS = [
+    os.path.join(BASE_DIR, 'build/static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfile')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -207,3 +206,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000"
 ]
+
+ALLOWED_HOSTS = ['twitter-clone-farhan.herokuapp.com','127.0.0.1:8000','localhost']
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+    ]
