@@ -130,7 +130,7 @@ STATIC_URL = '/static/'
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfile')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_RENDERER_CLASSES = [
@@ -206,8 +206,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
-ALLOWED_HOSTS = ['twitter-clone-farhan.herokuapp.com','127.0.0.1','localhost']
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+ALLOWED_HOSTS = [
+    'twitter-clone-farhan.herokuapp.com',
+    '127.0.0.1',
+    'localhost'
     ]
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']

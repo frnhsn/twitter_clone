@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import AuthService from '../services/auth.service.js';
 
 function LoginComponent() {
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const history = useHistory();
   const [errorMessage, setErrorMessage] = useState("");
 

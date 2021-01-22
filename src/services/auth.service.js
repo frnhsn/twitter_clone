@@ -9,7 +9,6 @@ export default class AuthService {
             username: username,
             password: password
         }).then(response => {
-            console.log('asdfasdf',username)
             if (response.data.access) {
                 let token = response.data.access;
                 let decodedToken = jwt.decode(token);

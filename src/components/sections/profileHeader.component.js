@@ -3,15 +3,10 @@ import { useState } from "react";
 import WhoToFollowDetailComponent from '../sections/whoToFollowDetail.component.js';
 
 function ProfileHeaderComponent(props) {
-    const [ inputLength, setInputLength ] = useState(0);
     const [ modal, setModal ] = useState({
         type: undefined,
         content: []
     });
-
-    function handleChange(e) {
-        setInputLength(e.target.value.length);
-    };
 
     function toggleModal(modalType) {
         const content = (modalType === 'Followers') ? props.followers : props.following;
@@ -31,12 +26,12 @@ function ProfileHeaderComponent(props) {
                 <h6 className="card-text my-3">{props.profile && props.profile.bio}</h6>
                 <div className="row justify-content-center my-3">
                     <a href="" className="col-2" data-toggle="modal" data-target="#scrollable-modal" onClick={() => toggleModal('Following')}>
-                        <h2 class="text-dark mb-1 font-weight-small">{props.profile && props.profile.following_count || 0}</h2>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Following</h6>
+                        <h2 className="text-dark mb-1 font-weight-small">{props.profile && props.profile.following_count || 0}</h2>
+                        <h6 className="text-muted font-weight-normal mb-0 w-100 text-truncate">Following</h6>
                     </a>
                     <a href="" className="col-2" data-toggle="modal" data-target="#scrollable-modal" onClick={() => toggleModal('Followers')}>
-                        <h2 class="text-dark mb-1 font-weight-small">{props.profile && props.profile.follower_count || 0}</h2>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Followers</h6>
+                        <h2 className="text-dark mb-1 font-weight-small">{props.profile && props.profile.follower_count || 0}</h2>
+                        <h6 className="text-muted font-weight-normal mb-0 w-100 text-truncate">Followers</h6>
                     </a>
                 </div>
             </div>

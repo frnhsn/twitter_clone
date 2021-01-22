@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react';
-import { User } from 'react-feather';
 import ProfileHeaderComponent from '../sections/profileHeader.component.js';
 import TweetListComponent from '../sections/tweetList.component.js';
 import WhoToFollowListComponent from '../sections/whoToFollowList.component.js';
@@ -29,7 +28,6 @@ function ProfileComponent(props) {
           UserService.getTweets(props.username).then(res => {
             if (!response.error) {
                 setUserTweets(res.data);
-                console.log(res.data);
             } else {
               alert(JSON.stringify(res.message));
             }
@@ -43,7 +41,7 @@ function ProfileComponent(props) {
         alert(error);
       });
     }
-  }, [])
+  }, [props])
 
   return (
     <div className="row p-4">
