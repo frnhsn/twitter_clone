@@ -9,6 +9,10 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+
+import django_heroku
+django_heroku.settings(locals())
+
 import os
 from pathlib import Path
 
@@ -127,10 +131,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILE_DIRS = [
-    os.path.join(BASE_DIR, 'build','static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILE_DIRS = []
+STATIC_ROOT = [os.path.join(BASE_DIR, 'build','static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_RENDERER_CLASSES = [
