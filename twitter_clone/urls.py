@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls.jwt')),
     path('api/', include('tweets.api.urls')),
     path('api/profile/', include('profiles.api.urls')),
-    re_path('.*', TemplateView.as_view(template_name='index.html'))
+    path('', TemplateView.as_view(template_name='index.html'))
     # path('account/', include('accounts.urls')),
     # path('profiles/', include('profiles.urls')),
 ]
