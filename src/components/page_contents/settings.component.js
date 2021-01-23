@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import UserService from '../../services/user.service.js';
 
 function SettingsComponent(props) {
   const { register, handleSubmit, setValue, errors } = useForm();
-  const [submitted, setSubmitted] = useState(false);
+  const [ submitted, setSubmitted ] = useState(false);
   const mounted = useRef();
 
   useEffect(() => {
@@ -17,7 +16,7 @@ function SettingsComponent(props) {
     } else {
       // Component did update
     }
-  });
+  }, [submitted]);
 
   const updateForm = () => {
     UserService.me().then(response => {
@@ -39,10 +38,6 @@ function SettingsComponent(props) {
     }).catch(error => {
       alert(error);
     });
-  }
-
-  const onClick = event => {
-    console.log()
   }
 
   return (
@@ -133,7 +128,7 @@ function SettingsComponent(props) {
                   type="submit" 
                   className="btn btn-block btn-dark"
                   disabled={submitted}>
-                    {submitted && 'Saved' || 'Save'}
+                    {(submitted && 'Saved') || 'Save'}
               </button>
               </div>
             </div>
