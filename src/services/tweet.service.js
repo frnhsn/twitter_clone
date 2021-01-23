@@ -8,7 +8,7 @@ const OPTIONS = {
     headers: { 
       'Content-Type': 'application/json', 
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' + (USER && USER.access_token || ''),
+      'Authorization': 'Bearer ' + ((USER && USER.access_token) || ''),
     },
 } 
 

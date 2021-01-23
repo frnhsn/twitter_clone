@@ -7,8 +7,8 @@ const separator = {
 
 function WhoToFollowDetailComponent(props) {
     const [followState, setFollowState] = useState(props.profile.already_followed);
-    const [followStyle, setFollowStyle] = useState(props.profile.already_followed && 'btn-success' || 'btn-primary');
-    const [followCaption, setFollowCaption] = useState(props.profile.already_followed && 'Following' || 'Follow');
+    const [followStyle, setFollowStyle] = useState((props.profile.already_followed && 'btn-success') || 'btn-primary');
+    const [followCaption, setFollowCaption] = useState((props.profile.already_followed && 'Following') || 'Follow');
 
     function handleFollow() {
         // Unfollow profile

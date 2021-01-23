@@ -19,8 +19,8 @@ function TweetDetailComponent(props) {
     // const [retweetStyle, setRetweetStyle] = useState((props.tweet.is_a_retweet && 'btn-primary' || 'btn-light'));
 
     const [tweet, setTweet] = useState(props.tweet);
-    const [likeStyle, setLikeStyle] = useState(props.tweet.is_already_liked && 'btn-danger' || 'btn-light');
-    const [retweetStyle, setRetweetStyle] = useState(props.tweet.is_a_retweet && 'btn-primary' || 'btn-light');
+    const [likeStyle, setLikeStyle] = useState((props.tweet.is_already_liked && 'btn-danger') || 'btn-light');
+    const [retweetStyle, setRetweetStyle] = useState((props.tweet.is_a_retweet && 'btn-primary') || 'btn-light');
 
     function handleLike() {
         // Unlike tweet
@@ -87,13 +87,13 @@ function TweetDetailComponent(props) {
                 <button type="button" className={likeStyle + ' btn btn-xs btn-circle p-0 mr-2'} onClick={handleLike} style={btnExtraSmall}>
                     <Heart size={".8rem"}/>
                 </button>
-                <span>{tweet.likes_count && tweet.likes_count || 0}</span>
+                <span>{(tweet.likes_count && tweet.likes_count) || 0}</span>
              </div>
              <div className='col-2'>
                 <button type="button" className={retweetStyle + ' btn btn-xs btn-circle p-0 mr-2'} onClick={handleRetweet} style={btnExtraSmall}>
                     <Repeat size={".8rem"}/>
                 </button>
-                <span>{tweet.retweet_count && tweet.retweet_count || 0}</span>
+                <span>{(tweet.retweet_count && tweet.retweet_count) || 0}</span>
              </div>
         </div>
     </div>

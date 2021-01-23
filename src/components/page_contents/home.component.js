@@ -27,7 +27,7 @@ function HomeComponent(props) {
     }).catch(error => {
       alert(error);
     });
-  }, [tweets])
+  }, [])
 
   return (
     <div className="row p-4">

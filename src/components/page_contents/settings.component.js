@@ -7,16 +7,23 @@ function SettingsComponent(props) {
   const [ submitted, setSubmitted ] = useState(false);
   const mounted = useRef();
 
+  // useEffect(() => {
+  //   if (!mounted.current) {
+  //     // Component did mount
+  //     updateForm();
+  //     mounted.current = true;
+  //     setSubmitted(false);
+  //   } else {
+  //     // Component did update
+  //   }
+  // }, []);
+
+
   useEffect(() => {
-    if (!mounted.current) {
-      // Component did mount
       updateForm();
-      mounted.current = true;
       setSubmitted(false);
-    } else {
-      // Component did update
-    }
-  }, [submitted]);
+  }, []);
+
 
   const updateForm = () => {
     UserService.me().then(response => {
