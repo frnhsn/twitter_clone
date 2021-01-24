@@ -17,7 +17,7 @@ function ProfileHeaderComponent(props) {
         <div className="card text-center">
             <div className="card-body">
                 <div className="row justify-content-center my-3">
-                    <img src="../assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
+                    <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
                 </div>
                 <h3 className="card-title">{props.profile && 
                     (props.profile.first_name + ' ' + props.profile.last_name)}</h3>

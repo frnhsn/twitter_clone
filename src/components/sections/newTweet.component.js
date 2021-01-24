@@ -26,7 +26,7 @@ function NewTweetComponent(props) {
                 {/* Tweet content */}
                 <div className="row">
                 <div className="col-1 mr-3">
-                    <img src="../assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
+                    <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
                 </div>
                 <div className="col-10">
                     <textarea 
