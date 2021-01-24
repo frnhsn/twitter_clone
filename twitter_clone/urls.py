@@ -28,7 +28,6 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls.jwt')),
     path('api/', include('tweets.api.urls')),
     path('api/profile/', include('profiles.api.urls')),
-    path('', TemplateView.as_view(template_name='index.html'))
-    # path('account/', include('accounts.urls')),
-    # path('profiles/', include('profiles.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [path('', TemplateView.as_view(template_name='index.html'))]
