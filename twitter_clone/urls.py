@@ -18,10 +18,14 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.decorators.cache import never_cache
+
 
 from rest_framework import routers
 
 from  accounts.api.views import (MyObtainTokenPairView, )
+
+index = never_cache(TemplateView.as_view(template_name='index.html'))
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +36,7 @@ urlpatterns = [
     path('api/profile/', include('profiles.api.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-urlpatterns += [path('', TemplateView.as_view(template_name='index.html'))]
+urlpatterns += [
+    re_path(r'^(?P<path>.*)/$', index),
+    path('', index)
+    ]

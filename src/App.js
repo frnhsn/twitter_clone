@@ -23,7 +23,6 @@ function App() {
     <div className="App">
       <Switch>
           {/* <Route exact path={["/", "/home"]} component={Home} /> */}
-          <MainWrapper exact path="/" title="Home" component={Home}/>
           <AuthRoute path="/login" component={Login} />
           <Route path="/logout" render={() => { 
             AuthService.logout();
@@ -34,6 +33,7 @@ function App() {
           <MainWrapper path="/profile/:username" title="Profile" component={ProfileWrapper}/>
           <MainWrapper exact path="/profile" title="Profile" component={ProfileWrapper}/>
           <MainWrapper path="/settings" title="Settings" component={Settings}/>
+          <MainWrapper path="/" title="Home" component={Home}/>
       </Switch>
     </div>
   );
