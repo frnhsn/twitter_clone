@@ -1,23 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import UserService from '../../services/user.service.js';
 
 function SettingsComponent(props) {
   const { register, handleSubmit, setValue, errors } = useForm();
   const [ submitted, setSubmitted ] = useState(false);
-  const mounted = useRef();
-
-  // useEffect(() => {
-  //   if (!mounted.current) {
-  //     // Component did mount
-  //     updateForm();
-  //     mounted.current = true;
-  //     setSubmitted(false);
-  //   } else {
-  //     // Component did update
-  //   }
-  // }, []);
-
 
   useEffect(() => {
       updateForm();

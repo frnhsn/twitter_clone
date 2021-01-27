@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-LOCAL = False
+LOCAL = True
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -53,7 +53,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-#    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,10 +87,15 @@ WSGI_APPLICATION = 'twitter_clone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=500)
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DATABASE_NAME', None),
+        'USER': os.environ.get('DATABASE_USER', None),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', None),
+        'HOST': os.environ.get('DATABASE_HOST', None),
+        'PORT': '3306',
+    }
 }
 
 if LOCAL:
@@ -143,8 +147,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build', 'static'),
     os.path.join(BASE_DIR, 'build')
     ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')  
 
 DEFAULT_RENDERER_CLASSES = [
     'rest_framework.renderers.JSONRenderer'
@@ -227,7 +230,3 @@ ALLOWED_HOSTS = [
     'localhost', 
     'twitterclone.fhasan.work',
     ]
-
-
-# import django_heroku
-# django_heroku.settings(locals())

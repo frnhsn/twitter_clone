@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import UserService from '../../services/user.service.js';
 
+const logoStyle = {
+    width: "3rem",
+    height: "auto"
+}
+
 export default function TopHeaderComponent(props) {
     const [user, setUser] = useState();
     
@@ -22,18 +27,12 @@ export default function TopHeaderComponent(props) {
                     <a href="/">
                     <b className="logo-icon">
                         {/* Dark Logo icon */}
-                        <img src="../static/assets/images/logo-icon.png" alt="homepage" className="dark-logo" />
+                        <img src="../static/logo192.png" alt="homepage" className="dark-logo" style={logoStyle}/>
                         {/* Light Logo icon */}
-                        <img src="../static/assets/images/logo-icon.png" alt="homepage" className="light-logo" />
+                        <img src="../static/logo192.png" alt="homepage" className="light-logo" style={logoStyle}/>
+                        <span><h6 className="text-dark my-1">Twitter Clone</h6></span>
                     </b>
                     {/*End Logo icon */}
-                    {/* Logo text */}
-                    <span className="logo-text">
-                        {/* dark Logo text */}
-                        <img src="../static/assets/images/logo-text.png" alt="homepage" className="dark-logo" />
-                        {/* Light Logo text */}
-                        <img src="../static/assets/images/logo-light-text.png" className="light-logo" alt="homepage" />
-                    </span>
                     </a>
                 </div>
                         {/* End Logo */}
