@@ -1,23 +1,28 @@
 import axios from 'axios';
 import AuthService from './auth.service.js';
 
-const USER = AuthService.getCurrentUser();
 const API_URL = 'http://localhost:8000/api/profile/';
-const OPTIONS = {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json', 
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + (USER && USER.access_token || ''),
-    },
-} 
+
 
 export default class UserService {
+    static getHeaders() {
+        let user = AuthService.getCurrentUser();
+        let headers = (user) ? { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + (user.access_token),
+          } : {
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+          }
+        return headers;
+    }
+
     static async getProfile(username) {
         return axios({
             method: 'get',
             url: API_URL + username + '/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             if (response.status === 200) {
                 return {
@@ -53,7 +58,7 @@ export default class UserService {
         return axios({
             method: 'get',
             url: API_URL + username + '/tweets/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             if (response.status === 200) {
                 return {
@@ -89,7 +94,7 @@ export default class UserService {
         return axios({
             method: 'get',
             url: API_URL + 'me/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             if (response.status === 200) {
                 return {
@@ -127,7 +132,7 @@ export default class UserService {
         return axios({
             method: method,
             url: API_URL + 'me/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
             data: {
                 first_name,
                 last_name,
@@ -168,7 +173,7 @@ export default class UserService {
         return axios({
             method: 'get',
             url: API_URL + 'who-to-follow',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             if (Math.round(response.status/100) === 2) {
                 return {
@@ -203,7 +208,7 @@ export default class UserService {
         return axios({
             method: 'post',
             url: API_URL + username + '/follow/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
         }).then(response => {
             if (Math.round(response.status/100) === 2) {
                 return {
@@ -238,7 +243,7 @@ export default class UserService {
         return axios({
             method: 'post',
             url: API_URL + username + '/unfollow/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
         }).then(response => {
             if (Math.round(response.status/100) === 2) {
                 return {
@@ -273,7 +278,7 @@ export default class UserService {
         return axios({
             method: 'get',
             url: API_URL + username + '/following/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
         }).then(response => {
             if (Math.round(response.status/100) === 2) {
                 return {
@@ -308,7 +313,7 @@ export default class UserService {
         return axios({
             method: 'get',
             url: API_URL + username + '/followers/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
         }).then(response => {
             if (Math.round(response.status/100) === 2) {
                 return {

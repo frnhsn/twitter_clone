@@ -1,23 +1,27 @@
 import axios from 'axios';
 import AuthService from "./auth.service.js";
 
-const USER = AuthService.getCurrentUser();
 const API_URL = 'http://localhost:8000/api/';
-const OPTIONS = {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json', 
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + ((USER && USER.access_token) || ''),
-    },
-} 
 
 class TweetService {
+    static getHeaders() {
+        let user = AuthService.getCurrentUser();
+        let headers = (user) ? { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + (user.access_token),
+          } : {
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+          }
+        return headers;
+    }
+
     static async getFeeds() {
         return axios({
             method: 'get',
             url: API_URL + 'feeds/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
@@ -48,7 +52,7 @@ class TweetService {
         return axios({
             method: 'get',
             url: API_URL + 'tweet/' + id,
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
@@ -79,7 +83,7 @@ class TweetService {
         return axios({
             method: 'post',
             url: API_URL + 'tweets/',
-            headers: OPTIONS.headers,
+            headers: this.getHeaders(),
             data: { content, image } 
         }).then(response => {
             return {
@@ -117,7 +121,7 @@ class TweetService {
         return axios({
             method: 'post',
             url: API_URL + 'tweet/' + id + '/like/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
@@ -151,7 +155,7 @@ class TweetService {
         return axios({
             method: 'post',
             url: API_URL + 'tweet/' + id + '/unlike/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
@@ -185,7 +189,7 @@ class TweetService {
         return axios({
             method: 'post',
             url: API_URL + 'tweet/' + id + '/retweet/',
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
@@ -219,7 +223,7 @@ class TweetService {
         return axios({
             method: 'delete',
             url: API_URL + 'tweet/' + id,
-            headers: OPTIONS.headers
+            headers: this.getHeaders()
         }).then(response => {
             return {
                 error: false,
