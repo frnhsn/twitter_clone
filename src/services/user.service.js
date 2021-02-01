@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AuthService from './auth.service.js';
 
-const API_URL = 'http://localhost:8000/api/profile/';
+const API_URL = 'https://twitterclone.fhasan.work/api/profile/';
 
 
 export default class UserService {

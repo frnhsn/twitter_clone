@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-const API_URL = 'http://127.0.0.1:8000/api/auth/';
+const API_URL = 'https://twitterclone.fhasan.work/api/auth/';
 
 export default class AuthService {
     static async login(username, password) {
