@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import UserService from '../../services/user.service.js';
 
-const logoStyle = {
-    width: "3rem",
-    height: "auto"
-}
-
 export default function TopHeaderComponent(props) {
     const [user, setUser] = useState();
     
@@ -27,17 +22,17 @@ export default function TopHeaderComponent(props) {
                     <a href="/">
                     <b className="logo-icon">
                         {/* Dark Logo icon */}
-                        <img src="../static/logo192.png" alt="homepage" className="dark-logo" style={logoStyle} />
+                        <img src="/static/assets/images/logo-icon.png" alt="homepage" className="dark-logo" />
                         {/* Light Logo icon */}
-                        <img src="../static/logo192.png" alt="homepage" className="light-logo" style={logoStyle}/>
+                        <img src="/static/assets/images/logo-icon.png" alt="homepage" className="light-logo" />
                     </b>
                     {/*End Logo icon */}
                     {/* Logo text */}
                     <span className="logo-text">
                         {/* dark Logo text */}
-                        <img src="../static/assets/images/logo-text.png" alt="homepage" className="dark-logo" />
+                        <img src="/static/assets/images/logo-text.png" alt="homepage" className="dark-logo" />
                         {/* Light Logo text */}
-                        <img src="../static/assets/images/logo-light-text.png" className="light-logo" alt="homepage" />
+                        <img src="/static/assets/images/logo-light-text.png" className="light-logo" alt="homepage" />
                     </span>
                     </a>
                 </div>
@@ -70,7 +65,7 @@ export default function TopHeaderComponent(props) {
                             {/* User profile and search */}
                             <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={40} />
+                        <img src="/static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={40} />
                         <span className="ml-2 d-none d-lg-inline-block"><span className="text-dark">{user && user.first_name}</span> <i data-feather="chevron-down" className="svg-icon" /></span>
                     </a>
                     <div className="dropdown-menu dropdown-menu-right user-dd animated flipInY">

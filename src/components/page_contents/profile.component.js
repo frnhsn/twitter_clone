@@ -11,6 +11,16 @@ function ProfileComponent(props) {
   const [ user, setUser ] = useState();
   const [ userTweets, setUserTweets] = useState([]);
 
+  const pushTweet = (tweet) => {
+    if (userTweets.map(tweet => tweet.id).indexOf(tweet.id) === -1) {
+      setUserTweets([tweet, ...userTweets]);
+    } 
+  };
+
+  const removeTweet = (tweetId) => {
+    setUserTweets(userTweets.filter(tweet => tweet.id !== tweetId));
+  };
+
   useEffect(() => {
     if (props.username) {
       UserService.getProfile(props.username).then(response => {
@@ -46,8 +56,14 @@ function ProfileComponent(props) {
   return (
     <div className="row p-4">
       <div className="col-md-8">
-          <ProfileHeaderComponent profile={user} following={following} followers={followers}/>
-          <TweetListComponent tweets={userTweets}/>
+          <ProfileHeaderComponent 
+            profile={user} 
+            following={following} 
+            followers={followers}/>
+          <TweetListComponent 
+            tweets={userTweets}
+            pushTweet={pushTweet}
+            removeTweet={removeTweet}/>
       </div>
       {/* Right sidebar */}
       <div className="right-sidebar col-md-4">

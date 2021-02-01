@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Repeat, Heart } from 'react-feather';
 import TweetService from '../../services/tweet.service.js';
-
+import moment from 'moment';
 
 const tweetSeparator = {
     borderTop: "1px solid var(--light)",
@@ -13,14 +13,9 @@ const btnExtraSmall = {
   };
 
 function TweetDetailComponent(props) {
-    // const [likeState, setLikeState] = useState(props.tweet.is_already_liked);
-    // const [likeStyle, setLikeStyle] = useState(props.tweet.is_already_liked && 'btn-danger' || 'btn-light');
-    // const [retweetState, setRetweetState] = useState(props.tweet.is_a_retweet);
-    // const [retweetStyle, setRetweetStyle] = useState((props.tweet.is_a_retweet && 'btn-primary' || 'btn-light'));
-
     const [tweet, setTweet] = useState(props.tweet);
     const [likeStyle, setLikeStyle] = useState((props.tweet.is_already_liked && 'btn-danger') || 'btn-light');
-    const [retweetStyle, setRetweetStyle] = useState((props.tweet.is_a_retweet && 'btn-primary') || 'btn-light');
+    const [retweetStyle, setRetweetStyle] = useState((props.tweet.is_already_retweeted && 'btn-primary') || 'btn-light');
 
     function handleLike() {
         // Unlike tweet
@@ -43,11 +38,10 @@ function TweetDetailComponent(props) {
     }
 
     function handleRetweet() {
-        if (tweet.is_a_retweet) {
+        if (tweet.is_already_retweeted) {
             TweetService.removeTweet(props.tweet.id).then((response) => {
                 if (!response.error) {
-                    setTweet(response.data);
-                    setRetweetStyle('btn-light');
+                    props.removeTweet(props.tweet.id);
                 };
             });
         } else {
@@ -56,6 +50,7 @@ function TweetDetailComponent(props) {
                     setTweet(response.data);
                     setRetweetStyle('btn-primary');
                 };
+                props.pushTweet(response.data)
             });
         }
 
@@ -66,18 +61,21 @@ function TweetDetailComponent(props) {
         {/* Tweet content */}
         <div className="row">
         <div className="col-1 mr-3">
-            <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
+            <img src="/static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
         </div>
         <div className="col-10">
             <h5 className="text-dark">
                 <a href={"/profile/"+ tweet.user.username}>{
-                    // (props.tweet.user.first_name && props.tweet.user.last_name
-                    // && props.tweet.user.first_name + ' ' + props.tweet.user.last_name) ||
-                    // (props.tweet.user.first_name && props.tweet.user.first_name) || 
-                    // (props.tweet.user.last_name && props.tweet.user.last_name) || ''}
-                    (props.tweet.user &&
-                        props.tweet.user.first_name + ' ' + props.tweet.user.last_name)}</a>
-                <span> @{props.tweet.user.username}</span></h5>
+                    (tweet.user &&
+                        tweet.user.first_name + ' ' + tweet.user.last_name)}</a>
+                <span> @{tweet.user.username}</span>
+
+                {tweet.is_a_retweet && <span><b> retweeted from @</b>
+                    <a href={"/profile/" + tweet.retweeted_from.username}>
+                        {tweet.retweeted_from.username}</a>
+                </span>}
+            </h5>
+
             <p>{props.tweet.content}</p>
         </div>
         </div>
@@ -95,6 +93,9 @@ function TweetDetailComponent(props) {
                 </button>
                 <span>{(tweet.retweet_count && tweet.retweet_count) || 0}</span>
              </div>
+        </div>
+        <div className="row justify-content-end pr-3 my-2">
+            <h6> {moment(tweet.timestamp).fromNow()}</h6>
         </div>
     </div>
     )

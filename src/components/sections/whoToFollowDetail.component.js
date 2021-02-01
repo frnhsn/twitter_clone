@@ -38,10 +38,10 @@ function WhoToFollowDetailComponent(props) {
             {/* Tweet content */}
             <div className="row">
             <div className="col-3">
-                <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
+                <img src="/static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
             </div>
             <div className="col-5">
-                <h5 className="text-dark"><a href={"profile/" + props.profile.username}>{
+                <h5 className="text-dark"><a href={"/profile/" + props.profile.username}>{
                     props.profile.first_name + ' ' + props.profile.last_name
                 }</a></h5>
                 <h5 className="text-dark">@{props.profile.username}</h5>    

@@ -117,6 +117,12 @@ def like_tweet_view(request, *args, **kwargs):
 
     tweet = tweet_obj.first()
 
+    if tweet.is_retweet():
+        if tweet.parent:
+            tweet = tweet.parent
+        else:
+            return Response({"message": "Parent tweet not found"}, status=404)
+
     user = request.user
     tweet.likes.add(user)
 
@@ -140,6 +146,12 @@ def unlike_tweet_view(request, *args, **kwargs):
         return Response({"message": "Tweet not found"}, status=404)
 
     tweet = tweet_obj.first()
+
+    if tweet.is_retweet():
+        if tweet.parent:
+            tweet = tweet.parent
+        else:
+            return Response({"message": "Parent tweet not found"}, status=404)
 
     user = request.user
     tweet.likes.remove(user)
@@ -189,7 +201,7 @@ def retweet_tweet_view(request, *args, **kwargs):
         serializers = TweetSerializers(existing_retweet.first())
     else:
         instance = Tweet.objects.create(**data)
-        serializers = TweetSerializers(instance)
+        serializers = TweetSerializers(instance, context={'request': request})
 
     return Response(serializers.data, status=200)
 

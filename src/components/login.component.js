@@ -31,7 +31,7 @@ function LoginComponent() {
         <div className="col-lg-12 col-md-12 bg-white">
           <div className="p-3">
             <div className="text-center">
-              <img src="../static/logo192.png" style={{height:'5rem',width:'auto'}} alt="wrapkit" />
+              <img src="/static/logo192.png" style={{height:'5rem',width:'auto'}} alt="wrapkit" />
             </div>
             <h2 className="mt-3 text-center">Sign In</h2>
             <p className="text-center">Enter your username and password to sign in. For demo account username: demo password: demo</p>

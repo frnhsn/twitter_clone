@@ -11,7 +11,7 @@ class ProfileSerializers(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField(read_only=True)
     following_count = serializers.SerializerMethodField(read_only=True)
     already_followed = serializers.SerializerMethodField(read_only=True)
-
+    tweet_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Profile
@@ -24,7 +24,8 @@ class ProfileSerializers(serializers.ModelSerializer):
             'location',
             'follower_count',
             'following_count',
-            'already_followed'
+            'already_followed',
+            'tweet_count'
         ]
 
     def get_user_id(self, obj):
@@ -52,6 +53,9 @@ class ProfileSerializers(serializers.ModelSerializer):
             user = request.user
             return obj.follower.filter(id=user.id).exists()
         return None
+
+    def get_tweet_count(self, obj):
+        return obj.user.tweet_set.count()
     
 
 class UserSerializers(serializers.ModelSerializer):

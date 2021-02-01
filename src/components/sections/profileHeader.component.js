@@ -17,7 +17,7 @@ function ProfileHeaderComponent(props) {
         <div className="card text-center">
             <div className="card-body">
                 <div className="row justify-content-center my-3">
-                    <img src="../static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
+                    <img src="/static/assets/images/users/profile-pic.jpg" alt="user" className="rounded-circle" width={60}/>
                 </div>
                 <h3 className="card-title">{props.profile && 
                     (props.profile.first_name + ' ' + props.profile.last_name)}</h3>
@@ -25,6 +25,10 @@ function ProfileHeaderComponent(props) {
                 <small className="badge badge-pill badge-info form-text text-white">{props.profile && props.profile.location}</small>
                 <h6 className="card-text my-3">{props.profile && props.profile.bio}</h6>
                 <div className="row justify-content-center my-3">
+                    <a href="" className="col-2">
+                        <h2 className="text-dark mb-1 font-weight-small">{(props.profile && props.profile.tweet_count) || 0}</h2>
+                        <h6 className="text-muted font-weight-normal mb-0 w-100 text-truncate">Tweets</h6>
+                    </a>
                     <a href="" className="col-2" data-toggle="modal" data-target="#scrollable-modal" onClick={() => toggleModal('Following')}>
                         <h2 className="text-dark mb-1 font-weight-small">{(props.profile && props.profile.following_count) || 0}</h2>
                         <h6 className="text-muted font-weight-normal mb-0 w-100 text-truncate">Following</h6>
@@ -41,7 +45,7 @@ function ProfileHeaderComponent(props) {
                     <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="scrollableModalTitle">{modal.type && modal.type}</h5>
-                        <button type="button" onClick={toggleModal} className="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
                     </div>
